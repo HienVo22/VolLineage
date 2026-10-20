@@ -1,0 +1,6 @@
+requests==2.34.2
+beautifulsoup4==4.15.0
+pandas==3.0.6
+sqlite-utils==4.2.1
+pytest==9.1.1
+python-dotenv==1.2.4
