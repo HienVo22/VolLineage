@@ -108,6 +108,4 @@ Sports-Reference reconciliation is shared: Hamzah lands the raw comparison rows,
 5. **Validation.** Publish season coverage, duplicate-name report, and jersey or position conflicts before any chart is treated as final.
 6. **Transition analysis and UI.** Retention, portal flow, and position-change metrics, then the Next.js visualizer.
 
-## License and course use
 
-Course work for COSC 445. Roster facts are compiled from public web archives for research and teaching. Upstream page text and HTML captures stay in `data/raw/` and are not redistributed from this repository.
