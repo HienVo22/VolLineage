@@ -60,34 +60,46 @@ Crawl politely: identify the project in the User-Agent, respect `robots.txt`, an
 ├── pipeline/                # normalize, dedupe, and resolve player identity
 ├── db/
 │   └── schema.sql           # players, seasons, roster_entries, player_aliases, career_events
-├── analysis/                # coverage checks and roster-transition metrics
+├── analysis/                # coverage checks, transition metrics, player lineage lookup
+├── reports/                 # generated CSV tables and figures (committed)
 ├── tests/                   # scraper fixtures and resolution cases
+├── paths.py                 # shared file locations
+├── Makefile                 # pipeline shortcuts
 └── web/                     # planned Next.js / Tailwind visualizer
 ```
 
 ## Quickstart
 
-Requires Python 3.11 or newer.
+Requires Python 3.11 or newer and network access to `web.archive.org`.
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-
-sqlite3 db/vollineage.sqlite3 < db/schema.sql
-sqlite3 db/vollineage.sqlite3 "SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY 1;"
+make setup          # python3 -m venv .venv && pip install -r requirements.txt
+make pipeline       # discover -> fetch-all -> extract -> clean -> load -> report (about 3-4 minutes)
+make test
 ```
 
-The database file is gitignored. Re-running the schema on an existing file is safe: every table is created with `IF NOT EXISTS`. Copy `.env.example` to `.env` when a script needs a User-Agent or an Archive.org contact URL. Do not commit `.env`.
+Each stage can also be run on its own, in order:
 
-Run the test suite once cases exist:
+| Command | Output |
+| --- | --- |
+| `python -m scrapers.discover` | `data/raw/cdx/season_captures.json`: Wayback CDX captures of `utsports.com/sports/football/roster/YYYY`, 1998–2025 |
+| `python -m scrapers.fetch_rosters --all-captures` | `data/raw/html/*.html` and `data/raw/manifest.jsonl` (one provenance line per capture) |
+| `python -m scrapers.extract` | `data/processed/roster_raw.csv`: every player row from every usable capture |
+| `python -m pipeline.clean` | `data/processed/roster_clean.csv`: one capture per season, normalized fields, QA flags |
+| `python -m pipeline.load` | `db/vollineage.sqlite3` and `data/processed/review_queue.csv` |
+| `python -m analysis.report` | `reports/*.csv` and `reports/figures/*.png` |
+| `python -m analysis.lineage "Jauan Jennings"` | one athlete's resolved history with provenance |
+| `python -m scrapers.discover --inventory` | capture counts for every site era |
 
-```bash
-pytest
-```
+Use the `.venv/bin/python` interpreter (or `source .venv/bin/activate`) and run from the repository root. The fetcher is resumable: cached captures are not downloaded again unless `--force` is passed. Copy `.env.example` to `.env` to set the User-Agent sent to the Internet Archive. Do not commit `.env`.
+
+The database, raw HTML, and processed CSVs are gitignored and rebuilt by the pipeline. `reports/` is committed so the current results are visible without a rebuild.
 
 `playwright` is optional and is not pinned in `requirements.txt`. Add it only if a roster year cannot be read from saved HTML.
+
+## Current status (Progress Check 1)
+
+See [`docs/progress_check_1_demo_guide.md`](docs/progress_check_1_demo_guide.md) for the demo script, current numbers, risks, and next steps.
 
 ## Team assignments
 

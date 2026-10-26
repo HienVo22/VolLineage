@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>VolLineage — Project Proposal</title>
+<style>
+  @page { size: Letter; margin: 1in; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 11pt;
+    line-height: 1.15;
+    color: #000;
+  }
+  h1 { font-size: 15pt; margin: 0 0 2pt 0; line-height: 1.15; }
+  .meta { font-size: 11pt; margin: 0 0 10pt 0; }
+  h2 { font-size: 12pt; margin: 11pt 0 3pt 0; line-height: 1.15; }
+  p { margin: 0 0 6pt 0; text-align: left; }
+  ul { margin: 0 0 6pt 0; padding-left: 18pt; }
+  li { margin: 0 0 2pt 0; }
+  table { border-collapse: collapse; width: 100%; margin: 3pt 0 6pt 0; font-size: 11pt; }
+  th, td { border: 1px solid #000; padding: 2pt 5pt; vertical-align: top; text-align: left; }
+  th { font-weight: bold; }
+  td.num { text-align: right; white-space: nowrap; }
+  code { font-family: "Courier New", Courier, monospace; font-size: 10.5pt; white-space: nowrap; }
+  .small-caption { margin: 0 0 6pt 0; }
+</style>
+</head>
+<body>
+
+<h1>VolLineage: Historical Tennessee Football Roster Archive &amp; Roster Transition Analysis</h1>
+<p class="meta">COSC 445 Digital Archaeology, University of Tennessee, Knoxville &mdash; Final Project Deliverable 3: Project Proposal<br>
+Team: Hien Vo, Hamzah, Bansari &mdash; October 2026 &mdash; Repository: <code>github.com/HienVo22/VolLineage</code></p>
+
+<h2>1. Objective</h2>
+<p>How has the composition of the Tennessee football roster changed from 1998 to the present, and how reliably can a single athlete be followed through an archival record that never assigned stable identifiers? The project will (1) recover every surviving season roster for Tennessee football from web archives, (2) resolve each listed athlete to one durable player identity despite changing jersey numbers, positions, class designations, redshirt labels, and name spellings, (3) store the result in a normalized SQLite database with provenance on every row, and (4) use that database to quantify roster transitions: year-over-year retention, redshirt and position-change rates, jersey-number reuse, and transfer-portal arrivals and departures, benchmarked against the rest of the FBS.</p>
+
+<h2>2. Motivation</h2>
+<p>UTSports roster pages were built for one season and then overwritten. Since 1998 the athletics site has moved through at least four platforms (hand-built HTML, the CollegeSports/CSTV host, the CBS-era <code>m-footbl</code> pages, and the current Sidearm site), and each changed the URL scheme and the table markup. The official site has no historical roster archive; the past exists only as Internet Archive snapshots. That makes this a textbook digital archaeology problem: the artifacts are fragmented across hosts, the context (which season a page describes) is sometimes recoverable only from a URL fragment or a capture timestamp, and the same person appears under several labels.</p>
+<p>The recovered data also answers questions that fans and reporters currently argue about without evidence. Did the transfer portal change how much of the roster turns over each year, or was churn always high? Which position groups switch most often? How quickly are jersey numbers recycled? Tennessee is a good case study because the window covers the full Fulmer, Kiffin, Dooley, Jones, Pruitt, and Heupel sequence, so coaching regime changes should be visible in roster churn.</p>
+
+<h2>3. Data</h2>
+<p><b>Primary source: Wayback Machine captures of UTSports football pages.</b> We used the Internet Archive CDX API to measure what survives before committing to the plan. Counting only unique, status-200 captures (collapsed by content digest), four URL eras are already enumerated:</p>
+<table>
+  <tr><th>Site era / URL pattern</th><th>Capture years</th><th>Unique captures</th></tr>
+  <tr><td><code>utsports.collegesports.com/sports/m-footbl/*</code></td><td>2004&ndash;2008</td><td class="num">9,435</td></tr>
+  <tr><td><code>utsports.com/sports/m-footbl/*</code> (roster and player bio pages)</td><td>2011&ndash;2017</td><td class="num">27,003</td></tr>
+  <tr><td><code>utsports.com/roster.aspx?path=football</code></td><td>2017&ndash;2019</td><td class="num">3,208</td></tr>
+  <tr><td><code>utsports.com/sports/football/roster*</code></td><td>2019&ndash;2026</td><td class="num">9,531</td></tr>
+  <tr><td><b>Total enumerated so far</b></td><td>2004&ndash;2026</td><td class="num"><b>49,177</b></td></tr>
+</table>
+<p>The 1998&ndash;2003 host still has to be located and is expected to be thinner. Roster index pages number in the low thousands; most captures are individual player bio pages (more than 7,000 in the 2011&ndash;2017 era alone), which carry hometown, high school, height, and weight, the fields that make entity resolution possible. Retrieval: enumerate with the CDX API, fetch each capture through the <code>id_</code> raw endpoint with rate limiting, cache raw HTML and capture metadata under <code>data/raw/</code>, and parse with BeautifulSoup. Playwright is reserved for any Sidearm-era page that requires JavaScript rendering.</p>
+<p><b>Breadth source: CollegeFootballData.com API</b> (free key). Season rosters for every FBS team, roughly 130 teams &times; 110&ndash;125 players, or about 15,000 rows per season and roughly 300,000 roster rows for 2004&ndash;2025, plus transfer-portal entries for 2021 onward. This lets us compare Tennessee's churn with SEC and FBS baselines instead of reporting it in isolation.</p>
+<p><b>Cross-check source: Sports-Reference College Football</b> season rosters, used for spot validation where Wayback coverage is thin. Accessed sparingly within their published rate limits, not bulk-scraped.</p>
+<p><b>Estimated volume.</b> About 50,000 page snapshots retrieved and parsed; roughly 3,500 Tennessee roster rows (28 seasons &times; 110&ndash;125 players); about 300,000 FBS roster rows from the API; several thousand portal records; several thousand derived career events; and tens of thousands of candidate alias strings produced during matching.</p>
+<p><b>Expected challenges.</b> (a) Markup drift across four platforms requires one extractor per era that emits a shared record format. (b) Duplicate and near-duplicate captures must be collapsed to one canonical capture per season. (c) Season attribution: a page captured in January 2015 may describe the 2014 roster, so the season must be inferred from page text, URL, and the football calendar rather than from the timestamp alone. (d) Identity drift: spellings, suffixes, nicknames, number changes, and redshirt labels all vary independently. (e) Older pages omit height, weight, or hometown. (f) The API and the school pages disagree on positions and class year, so integration needs reconciliation rules that preserve both values rather than overwriting one. (g) Politeness and runtime: roughly 50,000 Wayback requests at one to two per second is 7&ndash;14 hours of fetching, so the fetcher must be resumable and run in batches.</p>
+
+<h2>4. Approach</h2>
+<p>The pipeline is Ingestion &rarr; Entity Resolution &rarr; Relational SQLite &rarr; Analysis, implemented in Python 3.11 with <code>requests</code>, <code>beautifulsoup4</code>, <code>pandas</code>, <code>sqlite3</code>/<code>sqlite-utils</code>, and <code>pytest</code>. The repository skeleton and initial schema are already in place.</p>
+<ul>
+  <li><b>Discovery and retrieval.</b> Per-era CDX enumeration scripts; a resumable, rate-limited fetcher; raw HTML plus capture metadata kept permanently so any parsed row can be traced to its artifact.</li>
+  <li><b>Extraction and context recovery.</b> Era-specific parsers emitting a common record: raw name, jersey, position, class, height, weight, hometown, high school, inferred season, source URL, and snapshot timestamp. Unit tests run against saved HTML fixtures from each era.</li>
+  <li><b>Entity resolution.</b> Normalize names (case, punctuation, suffixes); block candidates on last name plus hometown or high school; score with name similarity, career-overlap plausibility (a career spans at most about six seasons), and physical-attribute consistency. Output <code>players</code> and <code>player_aliases</code> with a confidence score; low-confidence matches go to a manual review queue. A hand-labeled gold set of about 200 player pairs will measure matcher precision and recall.</li>
+  <li><b>Storage.</b> SQLite schema with <code>players</code>, <code>seasons</code>, <code>roster_entries</code>, <code>player_aliases</code>, and <code>career_events</code>. Identity, season appearance, alias evidence, and derived transitions are separate tables so a correction never destroys a source row.</li>
+  <li><b>Analysis.</b> Season coverage report; retention curves by coaching regime; position-change and jersey-reuse rates; portal inflow and outflow against SEC and FBS baselines from the API. Delivered as SQL, pandas notebooks, and static charts. A small Next.js/Tailwind viewer of individual player lineages is a stretch goal.</li>
+</ul>
+<p>Course connection: web archive discovery and retrieval, scraping fragmented HTML, provenance-preserving storage design, cleaning and entity resolution, context recovery, and analysis of the recovered record.</p>
+
+<h2>5. Team Responsibilities</h2>
+<ul>
+  <li><b>Hien Vo</b> &mdash; entity resolution and storage: <code>pipeline/</code>, the SQLite schema and loaders, matching rules, the gold set and matcher evaluation; repository and integration lead.</li>
+  <li><b>Hamzah</b> &mdash; discovery and ingestion: CDX enumeration for every era including the 1998&ndash;2003 host, the resumable fetcher, era-specific extractors with fixtures, and the CollegeFootballData API client.</li>
+  <li><b>Bansari</b> &mdash; analysis and presentation: coverage and conflict reports, transition metrics and charts, the written report and presentation, and the stretch web viewer.</li>
+</ul>
+<p>Shared: each member reviews a slice of the uncertain-match queue and writes tests for their own modules.</p>
+
+<h2>6. Timeline and Milestones</h2>
+<ul>
+  <li><b>Week of Oct 27</b> &mdash; Source inventory complete for all eras; schema frozen; API key obtained and client working; fetcher caching to <code>data/raw/</code>.</li>
+  <li><b>Nov 3</b> &mdash; Pilot: one legacy era and the modern era parsed end to end into <code>data/processed/</code>; all roster index pages fetched.</li>
+  <li><b>Nov 10</b> &mdash; Player bio pages fetched; resolution prototype running; gold set labeled; first <code>players</code> and <code>player_aliases</code> load.</li>
+  <li><b>Nov 17</b> &mdash; Full backfill 1998&ndash;present; FBS rosters and portal data loaded; coverage, duplicate-name, and jersey/position conflict reports published.</li>
+  <li><b>Nov 24</b> &mdash; Transition analysis and charts complete; draft report.</li>
+  <li><b>Dec 1</b> &mdash; Final report and presentation; stretch viewer only if the core deliverables are done.</li>
+</ul>
+
+<h2>7. Expected Outcome</h2>
+<p>A reproducible SQLite archive of Tennessee football rosters from 1998 to the present, with provenance for every row and a resolved player identity table; a measured entity-resolution quality report; and an analysis that answers how roster turnover, position switching, jersey reuse, and portal movement have changed across coaching eras, placed against FBS baselines. The result can be evaluated on three numbers: percentage of seasons with a recovered roster, matcher precision and recall on the gold set, and agreement rate with Sports-Reference spot checks. The code, schema, and processed extracts will be public in the project repository; raw HTML captures stay local and are not redistributed.</p>
+
+</body>
+</html>

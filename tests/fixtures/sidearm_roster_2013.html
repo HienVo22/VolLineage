@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head><title>2013 Football Roster - University of Tennessee Athletics</title></head>
+<body>
+<div id="vue-rosters"></div>
+<script>
+    var obj = {"name":"main-nav","data":[{"id":1,"title":"Sports"}]};
+</script>
+<script>
+    require(['vue'], function (Vue) {
+        var instance = new Vue({
+            el: '#vue-rosters',
+            data: () => ({
+                roster: {"id":43,"title":"2013 Football Roster","season":{"id":27,"title":"2013"},"sport":{"id":2,"title":"Football"},"players":[{"rp_id":1350,"player_id":587,"first_name":"Max","last_name":"Arnold","hometown":"McKenzie, Tenn.","highschool":"McKenzie","previous_school":"","weight":188,"height_feet":5,"height_inches":11,"position_short":"DB","position_long":"","jersey_number":"46","academic_year_short":"R-So.","rp_hide":false},{"rp_id":1303,"player_id":576,"first_name":"Patrick","last_name":"Ashford","hometown":"Morristown, Tenn.","highschool":"Morristown                                                    West","previous_school":"Carson-Newman","weight":201,"height_feet":6,"height_inches":null,"position_short":"QB ","position_long":"","jersey_number":"13","academic_year_short":"R-So.","rp_hide":false},{"rp_id":1400,"player_id":999,"first_name":"A.J.","last_name":"Johnson Jr.","hometown":"Gainesville, Ga.","highschool":"Gainesville","previous_school":"","weight":240,"height_feet":6,"height_inches":2,"position_short":"LB","position_long":"","jersey_number":"45","academic_year_short":"Jr.","rp_hide":false},{"rp_id":1401,"player_id":1000,"first_name":"Hidden","last_name":"Player","hometown":"","highschool":"","previous_school":"","weight":null,"height_feet":null,"height_inches":null,"position_short":"","position_long":"","jersey_number":"","academic_year_short":"","rp_hide":true}]},
+            }),
+        });
+    });
+</script>
+</body>
+</html>

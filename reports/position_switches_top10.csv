@@ -1,0 +1,11 @@
+switch,n
+DB -> LB,12
+RB -> TB,11
+WR -> DB,9
+OL -> OG,7
+DL -> OL,7
+DB -> WR,7
+TB -> RB,6
+DT -> OG,6
+DT -> DL,6
+DE -> DT,6
