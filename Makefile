@@ -1,6 +1,6 @@
 PY := .venv/bin/python
 
-.PHONY: setup discover fetch fetch-all extract clean load report pipeline test inventory
+.PHONY: setup discover fetch fetch-all extract clean load report pipeline test inventory portal
 
 setup:
 	python3 -m venv .venv
@@ -35,3 +35,7 @@ test:
 
 inventory:         ## capture counts per site era (slow: several minutes)
 	$(PY) -m scrapers.discover --inventory
+
+portal:            ## Tennessee portal rows for 2021-2025, then the comparison chart
+	$(PY) -m scrapers.cfbd
+	$(PY) -m analysis.portal_compare

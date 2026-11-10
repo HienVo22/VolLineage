@@ -90,6 +90,8 @@ Each stage can also be run on its own, in order:
 | `python -m analysis.report` | `reports/*.csv` and `reports/figures/*.png` |
 | `python -m analysis.lineage "Jauan Jennings"` | one athlete's resolved history with provenance |
 | `python -m scrapers.discover --inventory` | capture counts for every site era |
+| `python -m scrapers.cfbd` | Tennessee transfer-portal rows for 2021–2025 (`data/processed/cfbd_portal_tennessee.csv`) |
+| `python -m analysis.portal_compare` | roster previous-school counts vs the portal list, plus one chart |
 
 Use the `.venv/bin/python` interpreter (or `source .venv/bin/activate`) and run from the repository root. The fetcher is resumable: cached captures are not downloaded again unless `--force` is passed. Copy `.env.example` to `.env` to set the User-Agent sent to the Internet Archive. Do not commit `.env`.
 
@@ -97,9 +99,11 @@ The database, raw HTML, and processed CSVs are gitignored and rebuilt by the pip
 
 `playwright` is optional and is not pinned in `requirements.txt`. Add it only if a roster year cannot be read from saved HTML.
 
-## Current status (Progress Check 1)
+## Current status
 
-See [`docs/progress_check_1_demo_guide.md`](docs/progress_check_1_demo_guide.md) for the demo script, current numbers, risks, and next steps.
+Progress Check 1 recovered the 1998–2025 roster archive. See [`docs/progress_check_1_demo_guide.md`](docs/progress_check_1_demo_guide.md).
+
+Progress Check 2 adds the Tennessee transfer-portal list for 2021–2025 and compares it with the roster previous-school counts. The portal names are not matched to players yet. See [`docs/progress_check_2_demo_guide.md`](docs/progress_check_2_demo_guide.md).
 
 ## Team assignments
 
