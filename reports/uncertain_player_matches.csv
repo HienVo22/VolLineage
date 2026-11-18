@@ -1,0 +1,17 @@
+sidearm_id_a,name_a,seasons_a,hometown_a,high_school_a,sidearm_id_b,name_b,seasons_b,hometown_b,high_school_b,first_name_similarity,same_hometown,same_high_school,career_span,score,decision
+630,Deanthonie Summerhill,"[2011, 2012, 2013, 2014]",Tuscumbia,Deshler,797,Deanthoine Summerhill,[2010],Tuscumbia,Deshler,0.9,True,True,5,0.95,review
+865,Cory Sullins,"[2008, 2009]",Cottontown,White House,9034,Cody Sullins,[2007],Cottontown,White House,0.75,True,True,3,0.88,review
+8836,Walter Fisher,[2008],Nasvhille,Coffeyville (Kan.) Community College,8989,Walter Fisher,"[2006, 2007]",Nashville,,1.0,False,,3,0.5,review
+8006,John Henderson,"[1999, 2000, 2001]",Nashville,Pearl-Cohn,8898,John Henderson,"[2002, 2003, 2004]",Germantown,Briarcrest,1.0,False,False,6,0.5,review
+8761,Steven Lee,[2000],Citronelle,Citronelle,10446,Steven Lee,[1999],,,1.0,,,2,0.5,review
+6731,Cameron Miller,[2019],Knoxville,Bearden,9131,Cameron Miller,[2022],Memphis,Memphis Acad. of Health Sciences,1.0,False,False,4,0.5,review
+625,Michael Williams,"[2013, 2014]",Laurel,DeMatha Catholic HS,5572,Michael L. Williams,[2012],Knoxville,Bearden HS,0.93,False,False,3,0.47,review
+8730,Demonte' Bolden,[2008],Chattanooga. T.N.,Hargrave [Va.] Military,8985,Demonte Bolden,"[2005, 2006, 2007]",Chattanooga,Hargrave (VA) Military,1.0,False,True,4,0.75,review_conflicting_fields
+8731,Josh Briscoe,[2008],Lawndale,Burns,8981,Josh Briscoe,"[2005, 2006, 2007]",Shelby,Burns,1.0,False,True,4,0.75,review_conflicting_fields
+8642,Parys Haralson,"[2002, 2003, 2004]",Flora,Madison Central High School,8926,Parys Haralson,[2005],Flora,Madison Central,1.0,True,False,4,0.75,review_conflicting_fields
+8845,Andre Mathis,[2008],Eerie,Cathedral Prep,8993,Andre Mathis,"[2005, 2006, 2007]",Erie,Cathedral Prep,1.0,False,True,4,0.75,review_conflicting_fields
+863,Jacques McClendon,"[2008, 2009]",Cleveland,The Baylor School,9024,Jacques McClendon,"[2006, 2007]",Cleveland,Chattanooga Baylor,1.0,True,False,4,0.75,review_conflicting_fields
+833,Rico McCoy,"[2008, 2009]",Washington,St. John's,8994,Rico McCoy,"[2005, 2006, 2007]",Washington,St. John's College HS,1.0,True,False,5,0.75,review_conflicting_fields
+868,Chris Scott,"[2008, 2009]",Rverdale,Lovejoy,9001,Chris Scott,"[2005, 2006, 2007]",Riverdale,Lovejoy,1.0,False,True,5,0.75,review_conflicting_fields
+3048,Maurese Smith,"[2017, 2018]",Toney,Hazel Green,8544,Maurese Smith,"[2021, 2022]",Huntsville,Hazel Green,1.0,False,True,6,0.75,review_conflicting_fields
+862,Dan Williams,"[2008, 2009]",Memphis,Memphis East,9009,Dan Williams,"[2005, 2006, 2007]",Memphis,East,1.0,True,False,5,0.75,review_conflicting_fields

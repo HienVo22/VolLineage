@@ -271,7 +271,12 @@ def main() -> None:
     df["jersey_number"] = df.jersey_number.astype("Int64")
     result = build(df)
     pairs = result["pairs"]
-    pairs.sort_values(["decision", "score"], ascending=[True, False]).to_csv(REVIEW_QUEUE, index=False)
+    if {"decision", "score"}.issubset(pairs.columns):
+        pairs = pairs.sort_values(
+        ["decision", "score"],
+        ascending=[True, False]
+    )
+    pairs.to_csv(REVIEW_QUEUE, index=False)
 
     c = result["counts"]
     print(f"skipped {result['qa_rows_skipped']} QA-flagged rows")

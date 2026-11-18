@@ -134,12 +134,21 @@ def plot(coverage: pd.DataFrame, transitions: pd.DataFrame) -> list[str]:
     ax.set_title("Tennessee football: players listed per archived roster, 1998-2025")
     ax.set_xlabel("season")
     ax.set_ylabel("players")
-    ax.legend(ncol=4, fontsize=8, loc="upper left")
+    ax.legend(
+    ncol=4,
+    fontsize=8,
+    loc="upper center",
+    bbox_to_anchor=(0.5, -0.12)
+    )
+
     fig.tight_layout()
+    fig.subplots_adjust(bottom=0.30)
+    
     path = FIGURES / "roster_size_by_season.png"
     fig.savefig(path, dpi=150)
     plt.close(fig)
     written.append(path)
+  
 
     t = transitions.dropna(subset=["retention_pct"])
     fig, ax = plt.subplots(figsize=(11, 4.5))
@@ -151,9 +160,15 @@ def plot(coverage: pd.DataFrame, transitions: pd.DataFrame) -> list[str]:
     ax.set_title("Year-over-year retention: % of last season's roster listed again")
     ax.set_xlabel("season")
     ax.set_ylabel("% retained")
-    ax.legend(ncol=3, fontsize=8, loc="lower left")
+    ax.legend(
+    ncol=3,
+    fontsize=8,
+    loc="upper center",
+    bbox_to_anchor=(0.5, -0.12)
+)
     fig.tight_layout()
     path = FIGURES / "retention_by_season.png"
+    fig.subplots_adjust(bottom=0.25)
     fig.savefig(path, dpi=150)
     plt.close(fig)
     written.append(path)
@@ -168,8 +183,16 @@ def plot(coverage: pd.DataFrame, transitions: pd.DataFrame) -> list[str]:
     ax.set_title("Roster arrivals per season (first appearance on a recovered roster)")
     ax.set_xlabel("season")
     ax.set_ylabel("players")
-    ax.legend(fontsize=8, loc="upper left")
+    ax.legend(
+    ncol=2,
+    fontsize=8,
+    loc="upper center",
+    bbox_to_anchor=(0.5, -0.12)
+    )
     fig.tight_layout()
+    fig.subplots_adjust(bottom=0.25)
+    fig.savefig(path, dpi=150)
+    
     path = FIGURES / "arrivals_by_season.png"
     fig.savefig(path, dpi=150)
     plt.close(fig)
